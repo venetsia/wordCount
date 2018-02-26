@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 					
 					//do wordcount method
 					wordcount = countForFile(fp, wordcount);
-					wordOccurencesForFile(fp, 0, 0,name);
+					wordOccurencesForFile(fp, cFlag,name);
 					
 					//close file
 					fclose(fp);

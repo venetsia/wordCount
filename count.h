@@ -6,10 +6,10 @@
 #include <stdlib.h>
 
 //count how many words for read file
-int countForFile(FILE *fp, int wordcount)
+int countForFile(FILE *fp)
 {
 	int ch;
-	int linecount, charcount;
+	int linecount, charcount, wordcount;
 	
 	
 	 // Initialize counter variables
@@ -38,8 +38,6 @@ int countForFile(FILE *fp, int wordcount)
     {
         printf("Failed to open the file\n");
 	}
-    printf("Words : %d \n", wordcount);
-	
 	getchar();
 	return wordcount;
 }

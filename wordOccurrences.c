@@ -6,7 +6,7 @@
 #include <string.h>
 #include "functions.h"
  
-wordOccurences(char *input, char *output)
+wordOccurences(char *input, FILE *output)
 {
     int count = 0, c = 0, i, j = 0, k, space = 0;
     char str[100], p[50][100], str1[20], ptr1[50][100];
@@ -61,20 +61,13 @@ wordOccurences(char *input, char *output)
             if (strcmp(ptr1[i], p[j]) == 0)
                 c++;
         }
-		if(strcmp("invalid", output))
-			{
-				FILE *foutput = fopen(output, "w+");
-				fprintf(foutput,"%s -> %d times\n", ptr1[i], c);
-				fclose(foutput);
-			}
-		else
-			printf("%s -> %d times\n", ptr1[i], c);
-		printf("%s", output);
+		
+		fprintf(output,"%s -> %d times\n", ptr1[i], c);
         c = 0;
     }
 }
 
-wordOccurencesForFile(FILE *fp, int shouldIgnore, int shouldConvert, char *output)
+wordOccurencesForFile(FILE *fp, int cFLag, FILE *output)
 {
 	fseek(fp, 0, SEEK_END);
 	long fsize = ftell(fp);
@@ -93,7 +86,7 @@ wordOccurencesForFile(FILE *fp, int shouldIgnore, int shouldConvert, char *outpu
 	{	
 		for (i = 0;i<strlen(str);i++)
 		{
-			if (shouldIgnore == 1)
+			if (cFLag == 1)
 			{
 				//ignoring punctuation 	
 				if(str[i] == ',' || str[i] == '.' || str[i] == '!' 
@@ -120,7 +113,7 @@ wordOccurencesForFile(FILE *fp, int shouldIgnore, int shouldConvert, char *outpu
 			}
 			else
 			{	
-				if (shouldConvert == 1)
+				if (cFlag == 1)
 				{
 					//find upperCase letters
 					if(str[j] >= 'A' && str[j] <= 'Z')
@@ -164,14 +157,7 @@ wordOccurencesForFile(FILE *fp, int shouldIgnore, int shouldConvert, char *outpu
 				if (strcmp(ptr1[i], p[j]) == 0)
 				c++;
 			}
-			if(strcmp("invalid", output))
-			{
-				FILE *foutput = fopen(output, "a");
-				fprintf(foutput,"%s %d \n", ptr1[i], c);
-				fclose(foutput);
-			}
-			else
-				printf("%s %d \n", ptr1[i], c);
+			fprintf(output,"%s %d \n", ptr1[i], c);
 			c = 0;
 		}
 	}
