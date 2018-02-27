@@ -1,1 +1,11 @@
-whateverK -> 1 times
+WordCount is: 10
+HEllo -> 1 times
+My -> 1 times
+Name -> 1 times
+is -> 2 times
+Venetsia -> 1 times
+ -> 1 times
+Hello -> 1 times
+my -> 1 times
+name -> 1 times
+veNeTsia!‰	ws -> 1 times

@@ -6,7 +6,7 @@
 #include <string.h>
 #include "functions.h"
  
-wordOccurences(char *input, char *output)
+wordOccurences(char *input, FILE *output)
 {
     int count = 0, c = 0, i, j = 0, k, space = 0;
     char str[100], p[50][100], str1[20], ptr1[50][100];
@@ -17,7 +17,7 @@ wordOccurences(char *input, char *output)
     printf("string length is %d\n", strlen(input));
     for (i = 0;i<strlen(input);i++)
     {
-        if ((input[i] == ' ')||(input[i] == ', ')||(input[i] == '.'))
+        if ((input[i] == ' ')||(input[i] == ', ')||(input[i] == '.') || (input[i] == '\n'))
         {
             space++;
         }
@@ -61,20 +61,13 @@ wordOccurences(char *input, char *output)
             if (strcmp(ptr1[i], p[j]) == 0)
                 c++;
         }
-		if(strcmp("invalid", output))
-			{
-				FILE *foutput = fopen(output, "w+");
-				fprintf(foutput,"%s -> %d times\n", ptr1[i], c);
-				fclose(foutput);
-			}
-		else
-			printf("%s -> %d times\n", ptr1[i], c);
-		printf("%s", output);
+		
+		fprintf(output,"%s -> %d times\n", ptr1[i], c);
         c = 0;
     }
 }
 
-wordOccurencesForFile(FILE *fp, int shouldIgnore, int shouldConvert, char *output)
+wordOccurencesForFile(FILE *fp, int cFlag, FILE *output)
 {
 	fseek(fp, 0, SEEK_END);
 	long fsize = ftell(fp);
@@ -88,12 +81,24 @@ wordOccurencesForFile(FILE *fp, int shouldIgnore, int shouldConvert, char *outpu
    int count = 0, c = 0, i, j = 0, k, space = 0;
    char p[1000][512], str1[512], ptr1[1000][512];
    char *ptr;
+	int len = strlen(str);
+	
+	/*if(len > 0 && str[len -1] == '\n')
+	{
+		str[len - 1] = '\0';
+	}*/
 	
 	if ( fp )
 	{	
+		
 		for (i = 0;i<strlen(str);i++)
 		{
-			if (shouldIgnore == 1)
+			if(str[i] == '\n') 
+			{
+				str[i] = '\0 ';
+			}
+			
+			if (cFlag == 1)
 			{
 				//ignoring punctuation 	
 				if(str[i] == ',' || str[i] == '.' || str[i] == '!' 
@@ -103,15 +108,16 @@ wordOccurencesForFile(FILE *fp, int shouldIgnore, int shouldConvert, char *outpu
 					str[i] = ' ';
 				}
 			}
+				if ((str[i] == ' ')||(str[i] == ',')||(str[i] == '.'))
+				{
+					space++;
+				}
 			
-			if ((str[i] == ' ')||(str[i] == ',')||(str[i] == '.'))
-			{
-				space++;
-			}
+			
 		}
 		
 		for (i = 0, j = 0, k = 0;j < strlen(str);j++)
-		{
+		{	
 			if ((str[j] == ' ')||(str[j] == 44)||(str[j] == 46))
 			{
 				p[i][k] = '\0';
@@ -120,7 +126,7 @@ wordOccurencesForFile(FILE *fp, int shouldIgnore, int shouldConvert, char *outpu
 			}
 			else
 			{	
-				if (shouldConvert == 1)
+				if (cFlag == 1)
 				{
 					//find upperCase letters
 					if(str[j] >= 'A' && str[j] <= 'Z')
@@ -164,14 +170,7 @@ wordOccurencesForFile(FILE *fp, int shouldIgnore, int shouldConvert, char *outpu
 				if (strcmp(ptr1[i], p[j]) == 0)
 				c++;
 			}
-			if(strcmp("invalid", output))
-			{
-				FILE *foutput = fopen(output, "a");
-				fprintf(foutput,"%s %d \n", ptr1[i], c);
-				fclose(foutput);
-			}
-			else
-				printf("%s %d \n", ptr1[i], c);
+			fprintf(output,"%s %d \n", ptr1[i], c);
 			c = 0;
 		}
 	}
@@ -179,4 +178,5 @@ wordOccurencesForFile(FILE *fp, int shouldIgnore, int shouldConvert, char *outpu
     {
         printf("Failed to open the file\n");
 	}
+	
 }
